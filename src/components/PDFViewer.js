@@ -4,10 +4,6 @@ import { Document, Page, pdfjs } from 'react-pdf';
 // Set up the worker for react-pdf
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-// A4 dimensions in points (at 72 DPI)
-const A4_WIDTH = 595;
-const A4_HEIGHT = 842;
-
 const PDFViewer = ({ pdfUrl, businessName }) => {
 	const [numPages, setNumPages] = useState(null);
 	const [loading, setLoading] = useState(true);
@@ -42,8 +38,8 @@ const PDFViewer = ({ pdfUrl, businessName }) => {
 
 	return (
 		<div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4'>
-			<div className='bg-white rounded-lg shadow-lg max-w-4xl w-full'>
-				{/* PDF Viewer */}
+			<div className='bg-white rounded-lg shadow-lg w-full'>
+				{/* Document Viewer */}
 				<div className='p-6'>
 					{loading && (
 						<div className='flex justify-center py-12'>
@@ -60,7 +56,7 @@ const PDFViewer = ({ pdfUrl, businessName }) => {
 									target='_blank'
 									rel='noopener noreferrer'
 									className='text-blue-500 hover:underline'>
-									Open PDF in new tab
+									Open document in new tab
 								</a>
 							</p>
 						</div>
@@ -73,9 +69,6 @@ const PDFViewer = ({ pdfUrl, businessName }) => {
 									src={pdfUrl}
 									alt={businessName}
 									className='max-w-full h-auto'
-									style={{
-										maxWidth: `${A4_WIDTH * 0.75}px`,
-									}}
 								/>
 							</div>
 							<div className='flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-300'>
@@ -102,10 +95,7 @@ const PDFViewer = ({ pdfUrl, businessName }) => {
 												<Page
 													key={pageNum}
 													pageNumber={pageNum}
-													width={Math.min(
-														window.innerWidth - 60,
-														A4_WIDTH * 0.75,
-													)}
+													width={Math.min(window.innerWidth - 60, 900)}
 													renderTextLayer={false}
 												/>
 											),
@@ -117,7 +107,7 @@ const PDFViewer = ({ pdfUrl, businessName }) => {
 								<button
 									onClick={handleDownload}
 									className='px-4 py-2 bg-primary text-white rounded hover:opacity-90 transition'>
-									⬇️ Download Document
+									⬇️ Download
 								</button>
 							</div>
 						</>

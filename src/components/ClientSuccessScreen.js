@@ -65,7 +65,9 @@ const ClientSuccessScreen = ({ client, baseUrl, onFinish }) => {
 				<div className='p-8 space-y-6 max-h-[calc(100vh-400px)] overflow-y-auto'>
 					{/* Client Info */}
 					<div className='bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl border border-slate-200'>
-						<h3 className='font-bold text-gray-800 mb-4 text-lg'>📋 Client Details</h3>
+						<h3 className='font-bold text-gray-800 mb-4 text-lg'>
+							📋 Client Details
+						</h3>
 						<div className='space-y-3'>
 							<div className='flex justify-between items-center'>
 								<span className='text-gray-600'>Name:</span>
@@ -90,7 +92,9 @@ const ClientSuccessScreen = ({ client, baseUrl, onFinish }) => {
 
 					{/* Profile URL */}
 					<div className='bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-xl border-2 border-blue-200'>
-						<h3 className='font-bold text-gray-800 mb-4 text-lg'>🔗 Share Profile Link</h3>
+						<h3 className='font-bold text-gray-800 mb-4 text-lg'>
+							🔗 Share Profile Link
+						</h3>
 						<div className='flex items-center space-x-2 mb-3'>
 							<input
 								type='text'

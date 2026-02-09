@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PDFViewer from '../components/PDFViewer';
@@ -10,11 +10,7 @@ const ProfileView = () => {
 	const [loading, setLoading] = useState(true);
 	const [notFound, setNotFound] = useState(false);
 
-	useEffect(() => {
-		fetchProfile();
-	}, [uniqueUrl]);
-
-	const fetchProfile = async () => {
+	const fetchProfile = useCallback(async () => {
 		try {
 			setLoading(true);
 			const response = await api.get(`/clients/profile/${uniqueUrl}`);
@@ -27,7 +23,11 @@ const ProfileView = () => {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [uniqueUrl]);
+
+	useEffect(() => {
+		fetchProfile();
+	}, [fetchProfile]);
 
 	if (loading) {
 		return (

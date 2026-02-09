@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
@@ -12,11 +12,7 @@ const EditClient = () => {
 	const [fetching, setFetching] = useState(true);
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		fetchClient();
-	}, [id]);
-
-	const fetchClient = async () => {
+	const fetchClient = useCallback(async () => {
 		try {
 			setFetching(true);
 			const response = await api.get(`/clients/${id}`);
@@ -30,7 +26,11 @@ const EditClient = () => {
 		} finally {
 			setFetching(false);
 		}
-	};
+	}, [id, navigate]);
+
+	useEffect(() => {
+		fetchClient();
+	}, [fetchClient]);
 
 	const handleSubmit = async (formData) => {
 		try {

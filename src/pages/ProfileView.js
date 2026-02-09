@@ -53,7 +53,10 @@ const ProfileView = () => {
 	}
 
 	return (
-		<PDFViewer pdfUrl={client.pdfUrl} businessName={client.businessName} />
+		<PDFViewer 
+			pdfUrl={`${process.env.REACT_APP_API_URL.replace('/api', '')}${client.pdfUrl}`} 
+			businessName={client.businessName} 
+		/>
 	);
 };
 

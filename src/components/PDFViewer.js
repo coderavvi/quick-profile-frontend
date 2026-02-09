@@ -87,6 +87,7 @@ const PDFViewer = ({ pdfUrl, businessName }) => {
 												pageNumber={pageNum}
 												width={Math.min(window.innerWidth - 60, 900)}
 												renderTextLayer={false}
+												renderAnnotationLayer={false}
 											/>
 										),
 									)}

@@ -37,12 +37,12 @@ const PDFViewer = ({ pdfUrl, businessName }) => {
 	};
 
 	return (
-		<div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4'>
-			<div className='bg-white rounded-lg shadow-lg w-full'>
+		<div className='flex flex-col items-center justify-center h-screen bg-gray-100'>
+			<div className='bg-white rounded-lg shadow-lg w-full h-full flex flex-col'>
 				{/* Document Viewer */}
-				<div className='p-6'>
+				<div className='flex-1 overflow-y-auto p-6'>
 					{loading && (
-						<div className='flex justify-center py-12'>
+						<div className='flex justify-center items-center h-full'>
 							<div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary'></div>
 						</div>
 					)}
@@ -63,55 +63,45 @@ const PDFViewer = ({ pdfUrl, businessName }) => {
 					)}
 
 					{!error && isImage && (
-						<>
-							<div className='flex flex-col items-center'>
-								<img
-									src={pdfUrl}
-									alt={businessName}
-									className='max-w-full h-auto'
-								/>
-							</div>
-							<div className='flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-300'>
-								<button
-									onClick={handleDownload}
-									className='px-4 py-2 bg-primary text-white rounded hover:opacity-90 transition'>
-									⬇️ Download
-								</button>
-							</div>
-						</>
+						<div className='flex flex-col items-center'>
+							<img
+								src={pdfUrl}
+								alt={businessName}
+								className='max-w-full h-auto'
+							/>
+						</div>
 					)}
 
 					{!error && !isImage && (
-						<>
-							<Document
-								file={pdfUrl}
-								onLoadSuccess={onDocumentLoadSuccess}
-								onLoadError={onDocumentLoadError}
-								loading={<div>Loading document...</div>}>
-								<div className='flex flex-col items-center space-y-4'>
-									{numPages &&
-										Array.from({ length: numPages }, (_, i) => i + 1).map(
-											(pageNum) => (
-												<Page
-													key={pageNum}
-													pageNumber={pageNum}
-													width={Math.min(window.innerWidth - 60, 900)}
-													renderTextLayer={false}
-												/>
-											),
-										)}
-								</div>
-							</Document>
-
-							<div className='flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-300'>
-								<button
-									onClick={handleDownload}
-									className='px-4 py-2 bg-primary text-white rounded hover:opacity-90 transition'>
-									⬇️ Download
-								</button>
+						<Document
+							file={pdfUrl}
+							onLoadSuccess={onDocumentLoadSuccess}
+							onLoadError={onDocumentLoadError}
+							loading={<div>Loading document...</div>}>
+							<div className='flex flex-col items-center space-y-4'>
+								{numPages &&
+									Array.from({ length: numPages }, (_, i) => i + 1).map(
+										(pageNum) => (
+											<Page
+												key={pageNum}
+												pageNumber={pageNum}
+												width={Math.min(window.innerWidth - 60, 900)}
+												renderTextLayer={false}
+											/>
+										),
+									)}
 							</div>
-						</>
+						</Document>
 					)}
+				</div>
+
+				{/* Download Button */}
+				<div className='flex justify-center items-center gap-4 p-6 border-t border-gray-300 bg-white'>
+					<button
+						onClick={handleDownload}
+						className='px-4 py-2 bg-primary text-white rounded hover:opacity-90 transition'>
+						⬇️ Download
+					</button>
 				</div>
 			</div>
 		</div>

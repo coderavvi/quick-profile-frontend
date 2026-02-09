@@ -4,11 +4,15 @@ import { Document, Page, pdfjs } from 'react-pdf';
 // Set up the worker for react-pdf
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
+// A4 dimensions in points (at 72 DPI)
+const A4_WIDTH = 595;
+const A4_HEIGHT = 842;
+
 const PDFViewer = ({ pdfUrl, businessName }) => {
 	const [numPages, setNumPages] = useState(null);
-	const [pageNumber, setPageNumber] = useState(1);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [isImage, setIsImage] = useState(false);
 
 	const onDocumentLoadSuccess = ({ numPages }) => {
 		setNumPages(numPages);
@@ -17,22 +21,22 @@ const PDFViewer = ({ pdfUrl, businessName }) => {
 
 	const onDocumentLoadError = (error) => {
 		console.error('PDF load error:', error);
-		setError('Failed to load PDF');
-		setLoading(false);
-	};
-
-	const handlePreviousPage = () => {
-		setPageNumber((prev) => Math.max(prev - 1, 1));
-	};
-
-	const handleNextPage = () => {
-		setPageNumber((prev) => Math.min(prev + 1, numPages));
+		// Check if it might be an image
+		if (pdfUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+			setIsImage(true);
+			setLoading(false);
+		} else {
+			setError('Failed to load document');
+			setLoading(false);
+		}
 	};
 
 	const handleDownload = () => {
 		const link = document.createElement('a');
 		link.href = pdfUrl;
-		link.download = `${businessName}-profile.pdf`;
+		const fileExtension = pdfUrl.split('.').pop().toLowerCase();
+		const fileName = `${businessName}-profile.${fileExtension}`;
+		link.download = fileName;
 		link.click();
 	};
 
@@ -62,49 +66,60 @@ const PDFViewer = ({ pdfUrl, businessName }) => {
 						</div>
 					)}
 
-					{!error && (
+					{!error && isImage && (
+						<>
+							<div className='flex flex-col items-center'>
+								<img
+									src={pdfUrl}
+									alt={businessName}
+									className='max-w-full h-auto'
+									style={{
+										maxWidth: `${A4_WIDTH * 0.75}px`,
+									}}
+								/>
+							</div>
+							<div className='flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-300'>
+								<button
+									onClick={handleDownload}
+									className='px-4 py-2 bg-primary text-white rounded hover:opacity-90 transition'>
+									⬇️ Download
+								</button>
+							</div>
+						</>
+					)}
+
+					{!error && !isImage && (
 						<>
 							<Document
 								file={pdfUrl}
 								onLoadSuccess={onDocumentLoadSuccess}
 								onLoadError={onDocumentLoadError}
-								loading={<div>Loading PDF...</div>}>
-								<div className='flex flex-col items-center'>
-									<Page
-										pageNumber={pageNumber}
-										width={Math.min(window.innerWidth - 60, 800)}
-										renderTextLayer={false}
-									/>
+								loading={<div>Loading document...</div>}>
+								<div className='flex flex-col items-center space-y-4'>
+									{numPages &&
+										Array.from({ length: numPages }, (_, i) => i + 1).map(
+											(pageNum) => (
+												<Page
+													key={pageNum}
+													pageNumber={pageNum}
+													width={Math.min(
+														window.innerWidth - 60,
+														A4_WIDTH * 0.75,
+													)}
+													renderTextLayer={false}
+												/>
+											),
+										)}
 								</div>
 							</Document>
 
-							{numPages && (
-								<div className='flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-300'>
-									<button
-										onClick={handlePreviousPage}
-										disabled={pageNumber === 1}
-										className='px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-gray-400 transition'>
-										← Previous
-									</button>
-
-									<span className='text-gray-600 font-medium'>
-										Page {pageNumber} of {numPages}
-									</span>
-
-									<button
-										onClick={handleNextPage}
-										disabled={pageNumber >= numPages}
-										className='px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-gray-400 transition'>
-										Next →
-									</button>
-
-									<button
-										onClick={handleDownload}
-										className='px-4 py-2 bg-primary text-white rounded hover:opacity-90 transition'>
-										⬇️ Download PDF
-									</button>
-								</div>
-							)}
+							<div className='flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-300'>
+								<button
+									onClick={handleDownload}
+									className='px-4 py-2 bg-primary text-white rounded hover:opacity-90 transition'>
+									⬇️ Download Document
+								</button>
+							</div>
 						</>
 					)}
 				</div>

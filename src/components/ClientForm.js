@@ -70,10 +70,17 @@ const ClientForm = ({ initialData, onSubmit, loading }) => {
 	const handleFileChange = (e) => {
 		const file = e.target.files[0];
 		if (file) {
-			if (file.type !== 'application/pdf') {
+			const allowedTypes = [
+				'application/pdf',
+				'image/jpeg',
+				'image/png',
+				'image/gif',
+				'image/webp',
+			];
+			if (!allowedTypes.includes(file.type)) {
 				setErrors((prev) => ({
 					...prev,
-					pdf: 'Only PDF files are allowed',
+					pdf: 'Only PDF and image files are allowed',
 				}));
 				setPdf(null);
 				setPdfFileName('');
@@ -107,7 +114,7 @@ const ClientForm = ({ initialData, onSubmit, loading }) => {
 		if (!formData.uniqueUrl.trim()) {
 			newErrors.uniqueUrl = 'Unique URL is required';
 		} else if (!initialData && !pdf) {
-			newErrors.pdf = 'PDF file is required for new clients';
+			newErrors.pdf = 'PDF or image file is required for new clients';
 		}
 
 		return newErrors;
@@ -203,12 +210,12 @@ const ClientForm = ({ initialData, onSubmit, loading }) => {
 
 			<div>
 				<label className='block text-gray-700 font-medium mb-2'>
-					PDF File {!initialData && '*'}
+					Profile File (PDF or Image) {!initialData && '*'}
 				</label>
 				<div className='border-2 border-dashed border-gray-300 rounded p-6 text-center'>
 					<input
 						type='file'
-						accept='application/pdf'
+						accept='application/pdf,image/jpeg,image/png,image/gif,image/webp'
 						onChange={handleFileChange}
 						className='hidden'
 						id='pdf-input'
@@ -226,10 +233,10 @@ const ClientForm = ({ initialData, onSubmit, loading }) => {
 								</>
 							) : (
 								<>
-									Drag and drop PDF here or click to select
+									Drag and drop PDF or image here or click to select
 									<br />
 									<span className='text-sm text-gray-500'>
-										Maximum file size: 10MB
+										Supported: PDF, JPG, PNG, GIF, WebP (Max 10MB)
 									</span>
 								</>
 							)}

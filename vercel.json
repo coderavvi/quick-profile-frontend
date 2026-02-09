@@ -5,10 +5,6 @@
 			"destination": "/index.html"
 		}
 	],
-	"env": {
-		"REACT_APP_API_URL": "https://quick-profile-backend.onrender.com/api",
-		"REACT_APP_BASE_URL": "@react_app_base_url"
-	},
 	"buildCommand": "npm run build",
 	"outputDirectory": "build"
 }

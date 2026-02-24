@@ -1,0 +1,22 @@
+{
+	"name": "quickprofile",
+	"version": "1.0.0",
+	"description": "Business Profile Manager - Full Stack Application",
+	"private": true,
+	"scripts": {
+		"install-all": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ..",
+		"dev": "docker-compose up",
+		"dev-down": "docker-compose down",
+		"backend": "cd backend && npm run dev",
+		"frontend": "cd frontend && npm start"
+	},
+	"keywords": [
+		"business-profile",
+		"pdf-management",
+		"react",
+		"express",
+		"mongodb"
+	],
+	"author": "",
+	"license": "MIT"
+}
